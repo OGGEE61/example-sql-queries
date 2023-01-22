@@ -1,0 +1,82 @@
+--How many customers from El Paso ordered tires (find tires in CategoryDescription)? How many orders did they place in total? Answer: 2 customers, 27 orders. 
+  
+
+SELECT  
+
+Count(DISTINCT A.customerid) AS cust_num, 
+
+Count(A.ordernumber) AS number_of_order  
+
+FROM orders A 
+
+JOIN order_details B ON A.ordernumber=B.ordernumber 
+
+JOIN products C ON B.productnumber=C.productnumber 
+
+JOIN categories D ON C.categoryid=D.categoryid 
+
+JOIN customers E ON A.customerid=E.customerid 
+
+WHERE E.custcity = 'El Paso' AND C.  categoryid = '6'; 
+
+ 
+
+
+
+
+
+
+
+--Ex. 905. SchoolSchedulingExample * 
+
+--Show full names of teachers, their titles, the number of classes each is scheduled to teach, and the number of classes each is scheduled to teach on Wednesdays. Remember to include teachers that do not have any scheduled classes. Order the result set by the last name. 
+
+SELECT  
+
+ 
+
+B.stffirstname || ' ' || B.stflastname AS fullname, 
+
+A.title, 
+
+Sum(wednesdayschedule)AS Wednesday, 
+
+Sum(mondayschedule + tuesdayschedule + wednesdayschedule + thursdayschedule + fridayschedule + saturdayschedule )  AS total 
+
+FROM faculty A 
+
+LEFT JOIN staff B ON A.staffid=B.staffid 
+
+LEFT JOIN faculty_classes C ON A.staffid=C.staffid 
+
+LEFT JOIN classes D ON C.classid=D.classid 
+
+GROUP BY B.stffirstname || ' ' || B.stflastname, A.title,  B.stflastname 
+
+ORDER BY B.stflastname; 
+
+
+
+
+
+
+
+--Ex. 907. BowlingLeagueExample * 
+
+--Display for each bowler the bowler name, the average of the bowler’s raw game scores, and the number of matches a bowler played. Order the result set by the full name. 
+
+SELECT  
+
+A.bowlerfirstname || ' ' || A.bowlerlastname AS full_name, 
+
+Sum(B.rawscore) AS raw_score_sum , 
+
+Count(DISTINCT matchid) AS no_matches_played  
+
+FROM bowlers A 
+
+JOIN bowler_scores B ON A.bowlerid=B.bowlerid 
+
+GROUP BY A.bowlerfirstname || ' ' || A.bowlerlastname 
+
+ORDER BY full_name; 
