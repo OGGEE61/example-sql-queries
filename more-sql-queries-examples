@@ -1,0 +1,91 @@
+Ex.1 (17 points). user: COMPANIES_SAMPLE, password: BDA For each year in the 2007–2011 period, show the number of counties which became mostly urban in a given year whereas they were mostly rural in the preceding year. Please, use the COUNTY_DATA table and the fields  which  include  the  code  of  a  county  (COUNTY_CODE)  and  the  share  of  urban  population (URBAN_POPUL).
+
+ 
+
+SELECT
+
+a.year_id,
+
+Count(A.county_code) AS Counties
+
+FROM county_data A
+
+JOIN county_data B ON A.county_code=B.county_code   AND A.year_id=B.year_id+1
+
+WHERE A.year_id BETWEEN 2007 AND 2011 AND A.urban_popul<0.5 AND B.urban_popul>0.5
+
+GROUP BY A.year_id
+
+ORDER by A.year_id   ;
+
+ 
+
+Ex.2 (17 points). SchoolSchedulingExample What are the names of departments that supervise subjects with the longest class duration on Tuesdays.
+
+ 
+
+ 
+
+SELECT DISTINCT
+
+A.deptname
+
+FROM departments A
+
+JOIN categories B ON A.departmentid=B.departmentid
+
+JOIN subjects C ON B.categoryid=C.categoryid
+
+JOIN classes D ON C.subjectid=D.subjectid
+
+WHERE  D.duration= (SELECT  Max(Duration) FROM classes WHERE tuesdayschedule=1 )
+
+AND  tuesdayschedule=1;
+
+ 
+
+ 
+
+ 
+
+ 
+
+Ex.3 (16 points). EntertainmentAgencyExample Each entertainer plays some musical styles (as defined in the table ENTERTAINER_STYLES), and each customer likes some musical styles (as defined in the table MUSICAL_PREFERENCES). Show the lowest and the highest contract price of engagements in which customers from Bellevue or Kirkland booked an entertainer playing a style they like.
+
+ 
+
+ 
+
+SELECT
+
+Max(YY.contractprice),
+
+Min(YY.contractprice)
+
+from
+
+(SELECT *
+
+FROM engagements A
+
+JOIN customers B ON A.customerid=B.customerid
+
+JOIN musical_preferences C ON B.customerid=C.customerid
+
+WHERE B.custcity='Bellevue' OR B.custcity='Kirkland') XX
+
+ 
+
+Left JOIN
+
+(SELECT * FROM engagements AA
+
+JOIN entertainers BB ON AA.entertainerid=BB.entertainerid
+
+JOIN entertainer_styles CC ON BB.entertainerid=CC.entertainerid) YY
+
+ 
+
+ON XX.customerid=YY.customerid
+
+WHERE XX.styleid=YY.styleid ;
